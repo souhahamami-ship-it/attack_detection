@@ -1,52 +1,72 @@
-# 🚨 Attack Detection System
+# 🛡️ Real-Time Intrusion Detection System (IDS)
 
 ## 📌 Overview
 
-This project is a **Machine Learning-based Attack Detection System** designed to identify malicious activities in data.
+This project is a **Machine Learning-based Intrusion Detection System (IDS)** designed to detect and classify cyber attacks in real-time.
 
-It uses a trained **XGBoost model** along with preprocessing pipelines to classify whether an input represents an attack or normal behavior.
-
----
-
-## 🧠 Features
-
-* Pretrained ML model (XGBoost)
-* Data preprocessing pipeline
-* API for predictions
-* Simple user interface
-* Ready-to-use saved models
+It leverages the **NSL-KDD dataset** and an **XGBoost model** to identify multiple types of network attacks and visualize them through an interactive dashboard.
 
 ---
 
-## 🗂️ Project Structure
+## 🚀 Features
+
+* 🔍 Multi-class attack detection (DoS, Probe, R2L, U2R)
+* ⚡ Real-time simulation of network traffic
+* 🧠 Machine Learning model (XGBoost)
+* 📊 Interactive SOC-style dashboard (Streamlit)
+* 🚨 Alert system (visual + sound)
+* 📈 Live attack statistics and logs
+* 🔄 Start/Stop real-time monitoring
+
+---
+
+## 🧠 Attack Categories
+
+The system classifies traffic into:
+
+* **Normal**
+* **DoS (Denial of Service)**
+* **Probe**
+* **R2L (Remote to Local)**
+* **U2R (User to Root)**
+* **Other**
+
+---
+
+## 🏗️ Project Structure
 
 ```bash
 attack_detection/
 │── app/
-│   ├── api.py              # API for model inference
-│   ├── ui.py               # User interface
-│
-│── artifacts/
-│   ├── xgb_model.pkl       # Trained XGBoost model
-│   ├── scaler.pkl          # Feature scaler
-│   ├── label_encoders.pkl  # Encoders for categorical data
-│   ├── attack_label_encoder.pkl # Target encoder
+│   ├── dashboard.py       # SOC dashboard (Streamlit)
+│   ├── simulator.py       # Real-time traffic simulator
+│   ├── api.py             # (Optional) API interface
+│   ├── ui.py              # (Optional) basic UI
 │
 │── src/
-│   ├── config.py           # Configuration settings
-│   ├── preprocessing.py    # Data preprocessing logic
+│   ├── preprocessing.py   # Data processing pipeline
+│   ├── config.py          # Feature selection & settings
 │
-│── train.py                # Model training script
-│── requirements.txt        # Dependencies
-│── README.md               # Project documentation
-│── .gitignore.txt
+│── artifacts/
+│   ├── xgb_model.pkl
+│   ├── scaler.pkl
+│   ├── label_encoders.pkl
+│   ├── attack_label_encoder.pkl
+│
+│── data/
+│   └── raw/
+│       └── KDDTrain+_20Percent.txt
+│
+│── train.py
+│── requirements.txt
+│── README.md
 ```
 
 ---
 
 ## ⚙️ Installation
 
-### 1. Clone the repository
+### 1. Clone repository
 
 ```bash
 git clone https://github.com/souhahamami-ship-it/attack_detection.git
@@ -63,65 +83,66 @@ pip install -r requirements.txt
 
 ## ▶️ Usage
 
-### 🔹 Run the API
-
-```bash
-python app/api.py
-```
-
-### 🔹 Run the UI
-
-```bash
-python app/ui.py
-```
-
-### 🔹 Train the model (optional)
+### 🔹 Train the model
 
 ```bash
 python train.py
 ```
 
----
+### 🔹 Run simulator (terminal)
 
-## 🔍 How It Works
+```bash
+python app/simulator.py
+```
 
-1. Input data is collected
-2. Data is preprocessed using:
+### 🔹 Launch dashboard
 
-   * Scaling
-   * Encoding
-3. The trained **XGBoost model** predicts the result
-4. Output is classified as:
-
-   * Normal
-   * Attack
+```bash
+python -m streamlit run app/dashboard.py
+```
 
 ---
 
-## 🤖 Model Details
+## 📊 Dashboard Features
 
-* Algorithm: **XGBoost**
-* Saved as: `artifacts/xgb_model.pkl`
+* Real-time attack monitoring
+* Attack type distribution chart
+* Live logs (last 50 events)
+* Start / Stop control
+* Alert system (🚨 + sound)
+
+---
+
+## 🧪 Dataset
+
+* **NSL-KDD Dataset**
+* File used: `KDDTrain+_20Percent.txt`
+
+---
+
+## 🤖 Model
+
+* Algorithm: **XGBoost Classifier**
+* Multi-class classification
 * Preprocessing:
 
-  * Standard Scaler
-  * Label Encoders
+  * Label Encoding
+  * Feature Scaling (StandardScaler)
 
 ---
 
-## 📊 Output
+## 🚨 Alert System
 
-The system returns:
-
-* Predicted class (Attack / Normal)
-* Encoded label
+* Visual alert for detected attacks
+* Sound notification in browser
+* Highlights attack type in real-time
 
 ---
 
-## 🚀 Future Improvements
+## 👩‍💻 Author
 
-* Add real-time network monitoring
-* Deploy API using Flask/FastAPI
-* Improve UI design
-* Add more advanced models (Deep Learning)
+**Souha Hammami**
+🔗 https://github.com/souhahamami-ship-it
+
+---
 
