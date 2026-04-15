@@ -110,6 +110,7 @@ python -m streamlit run app/dashboard.py
 * Live logs (last 50 events)
 * Start / Stop control
 * Alert system (🚨 )
+* Alert system (🚨 + sound)
 
 ---
 
@@ -134,7 +135,7 @@ python -m streamlit run app/dashboard.py
 ## 🚨 Alert System
 
 * Visual alert for detected attacks
-* Highlights attack type in real-time
+
 
 ---
 
