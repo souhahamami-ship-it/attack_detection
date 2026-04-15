@@ -1,29 +1,127 @@
-# 🛡️ Network Anomaly Detection (ML)
+# 🚨 Attack Detection System
 
-"""
 ## 📌 Overview
-Machine Learning app to detect network attacks using NSL-KDD dataset.
 
-## ⚙️ Tech Stack
-- Python
-- XGBoost
-- FastAPI
-- Streamlit
+This project is a **Machine Learning-based Attack Detection System** designed to identify malicious activities in data.
 
-## 🚀 Run Project
+It uses a trained **XGBoost model** along with preprocessing pipelines to classify whether an input represents an attack or normal behavior.
 
-### 1. Train model
+---
+
+## 🧠 Features
+
+* Pretrained ML model (XGBoost)
+* Data preprocessing pipeline
+* API for predictions
+* Simple user interface
+* Ready-to-use saved models
+
+---
+
+## 🗂️ Project Structure
+
+```bash
+attack_detection/
+│── app/
+│   ├── api.py              # API for model inference
+│   ├── ui.py               # User interface
+│
+│── artifacts/
+│   ├── xgb_model.pkl       # Trained XGBoost model
+│   ├── scaler.pkl          # Feature scaler
+│   ├── label_encoders.pkl  # Encoders for categorical data
+│   ├── attack_label_encoder.pkl # Target encoder
+│
+│── src/
+│   ├── config.py           # Configuration settings
+│   ├── preprocessing.py    # Data preprocessing logic
+│
+│── train.py                # Model training script
+│── requirements.txt        # Dependencies
+│── README.md               # Project documentation
+│── .gitignore.txt
+```
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/souhahamami-ship-it/attack_detection.git
+cd attack_detection
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## ▶️ Usage
+
+### 🔹 Run the API
+
+```bash
+python app/api.py
+```
+
+### 🔹 Run the UI
+
+```bash
+python app/ui.py
+```
+
+### 🔹 Train the model (optional)
+
+```bash
 python train.py
+```
 
-### 2. Run API
-uvicorn app.api:app --reload
+---
 
-### 3. Run UI
-streamlit run app/ui.py
+## 🔍 How It Works
 
-## 📊 Features
-- Attack classification (DoS, Probe, R2L, U2R)
-- Clean ML pipeline
-- API + UI
-"""
+1. Input data is collected
+2. Data is preprocessed using:
+
+   * Scaling
+   * Encoding
+3. The trained **XGBoost model** predicts the result
+4. Output is classified as:
+
+   * Normal
+   * Attack
+
+---
+
+## 🤖 Model Details
+
+* Algorithm: **XGBoost**
+* Saved as: `artifacts/xgb_model.pkl`
+* Preprocessing:
+
+  * Standard Scaler
+  * Label Encoders
+
+---
+
+## 📊 Output
+
+The system returns:
+
+* Predicted class (Attack / Normal)
+* Encoded label
+
+---
+
+## 🚀 Future Improvements
+
+* Add real-time network monitoring
+* Deploy API using Flask/FastAPI
+* Improve UI design
+* Add more advanced models (Deep Learning)
 
