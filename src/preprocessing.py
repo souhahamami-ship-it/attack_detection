@@ -1,15 +1,17 @@
+
 import pandas as pd
 import numpy as np
 import joblib
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from src.config import SELECTED_FEATURES, CATEGORICAL_COLUMNS
 
-# Attack mapping
-dos_attacks = [...]
-probe_attacks = [...]
-r2l_attacks = [...]
-u2r_attacks = [...]
+# ✅ FULL ATTACK LISTS (IMPORTANT)
+dos_attacks = ["neptune","smurf","back","teardrop","pod","land"]
+probe_attacks = ["satan","ipsweep","nmap","portsweep"]
+r2l_attacks = ["guess_passwd","ftp_write","imap","phf","multihop","warezclient","warezmaster"]
+u2r_attacks = ["buffer_overflow","loadmodule","rootkit","perl"]
 
+# ✅ Attack mapping
 def map_attack_type(label):
     if label == 'normal':
         return 'Normal'
@@ -21,7 +23,8 @@ def map_attack_type(label):
         return 'R2L'
     elif label in u2r_attacks:
         return 'U2R'
-    return 'Other'
+    else:
+        return 'Other'
 
 
 def clean_data(df):
@@ -37,23 +40,28 @@ def clean_data(df):
 def encode_features(df, training=True):
     if training:
         label_encoders = {}
+
         for col in CATEGORICAL_COLUMNS:
             le = LabelEncoder()
             df[col] = le.fit_transform(df[col].astype(str))
             label_encoders[col] = le
+
         joblib.dump(label_encoders, "artifacts/label_encoders.pkl")
+
     else:
         label_encoders = joblib.load("artifacts/label_encoders.pkl")
+
         for col in CATEGORICAL_COLUMNS:
             le = label_encoders[col]
-            df[col] = df[col].astype(str).apply(
-                lambda x: x if x in le.classes_ else 'unknown'
-            )
-            if 'unknown' not in le.classes_:
-                le.classes_ = np.append(le.classes_, 'unknown')
+
+            df[col] = df[col].astype(str)
+
+            # handle unknown safely
+            df[col] = df[col].apply(lambda x: x if x in le.classes_ else le.classes_[0])
+
             df[col] = le.transform(df[col])
 
-    return df
+    return df, label_encoders
 
 
 def encode_target(df, training=True):
@@ -61,13 +69,15 @@ def encode_target(df, training=True):
 
     if training:
         attack_le = LabelEncoder()
-        attack_le.fit(['DoS','Normal','Other','Probe','R2L','U2R'])
+        df['attack_type_encoded'] = attack_le.fit_transform(df['attack_type'])
+
         joblib.dump(attack_le, "artifacts/attack_label_encoder.pkl")
+
     else:
         attack_le = joblib.load("artifacts/attack_label_encoder.pkl")
+        df['attack_type_encoded'] = attack_le.transform(df['attack_type'])
 
-    df['attack_type_encoded'] = attack_le.transform(df['attack_type'])
-    return df
+    return df, attack_le
 
 
 def scale_features(X, training=True):
@@ -79,17 +89,23 @@ def scale_features(X, training=True):
         scaler = joblib.load("artifacts/scaler.pkl")
         X_scaled = scaler.transform(X)
 
-    return X_scaled
+    return X_scaled, scaler
 
 
 def preprocess(df, training=True):
     df = clean_data(df)
-    df = encode_features(df, training)
-    df = encode_target(df, training)
 
+    df, encoders = encode_features(df, training)
+    df, attack_le = encode_target(df, training)
+
+    # ⚠️ ensure feature order is FIXED
     X = df[SELECTED_FEATURES]
     y = df['attack_type_encoded']
 
-    X_scaled = scale_features(X, training)
+    X_scaled, scaler = scale_features(X, training)
 
-    return X_scaled, y
+    if training:
+        return X_scaled, y, scaler, encoders
+    else:
+        return X_scaled, y
+
